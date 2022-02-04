@@ -1,0 +1,12 @@
+name: 'Set Migration Label'
+description: 'Detecting and automatically labeling migration changes.'
+author: 'smoothbear'
+inputs:
+    owner:
+      description: 'Repository owner name.'
+      required: false
+    token:
+      description: 'Github access token.'
+runs:
+    using: 'node16'
+    main: 'dist/label/index.js'

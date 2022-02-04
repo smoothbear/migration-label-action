@@ -1,0 +1,29 @@
+{
+  "name": "migration-label",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build -o dist/label src/label.ts",
+    "format": "prettier --write \"{,!(node_modules)/**/}*.ts\"",
+    "format-check": "prettier --check \"{,!(node_modules)/**/}*.ts\"",
+    "prerelease": "npm run-script build",
+    "release": "git add -f dist/label/index.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.1",
+    "jest": "^27.3.1",
+    "jest-circus": "^27.4.6",
+    "prettier": "^1.19.1",
+    "ts-jest": "^27.0.1",
+    "typescript": "^4.5.5"
+  }
+}
