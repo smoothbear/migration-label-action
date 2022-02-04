@@ -16,7 +16,7 @@ async function run() {
 
         if (!prNumber) {
             core.error('Failed to get pull request information!');
-            return;
+            throw new Error("failed to get pull request")
         }
 
         const { data: pullRequest } = await client.rest.pulls.get({
