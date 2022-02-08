@@ -11,6 +11,7 @@ async function run() {
 
         const labelNameInput = core.getInput(constants.LABEL_NAME);
         const labelName = labelNameInput !== '' ? labelNameInput : constants.LABEL_DEFAULT_NAME;
+        core.info(`${labelName} will be added`)
 
         const token = core.getInput(constants.GITHUB_TOKEN, { required: true });
         const client: ClientType = github.getOctokit(token);
