@@ -35,6 +35,7 @@ export async function addMigrationLabel(
     labelName: string,
     existLabels: string[],
 ) {
+    core.info(`${labelName} will be added`);
     core.info('Adding migration labels..');
 
     existLabels.push(labelName);

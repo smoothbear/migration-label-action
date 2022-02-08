@@ -24,4 +24,4 @@ jobs:
 | - | - | - |
 | `label-name` | Will be added label's name. default: `migration` | false |
 | `owner` | A repository owner username. | false |
-| `token` | Personal access token. If you didn't define owner, use `${{ secrets.GITHUB_TOKEN}} | true |
+| `token` | Personal access token. If you didn't define owner, use `${{ secrets.GITHUB_TOKEN}}` | true |
