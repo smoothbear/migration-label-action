@@ -2,6 +2,9 @@ name: 'Set Migration Label'
 description: 'Detecting and automatically labeling migration changes.'
 author: 'smoothbear'
 inputs:
+    label-name:
+      description: 'Label name'
+      required: false
     owner:
       description: 'Repository owner name.'
       required: false
