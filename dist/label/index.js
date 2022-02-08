@@ -8305,10 +8305,11 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.LABEL_NAME = exports.GITHUB_TOKEN = exports.REPO_OWNER = void 0;
+exports.LABEL_DEFAULT_NAME = exports.LABEL_NAME = exports.GITHUB_TOKEN = exports.REPO_OWNER = void 0;
 exports.REPO_OWNER = 'owner';
 exports.GITHUB_TOKEN = 'token';
-exports.LABEL_NAME = 'migration';
+exports.LABEL_NAME = 'label-name';
+exports.LABEL_DEFAULT_NAME = 'migration';
 
 
 /***/ }),
@@ -8356,12 +8357,14 @@ function run() {
         try {
             const ownerInput = core.getInput(constants.REPO_OWNER);
             const owner = ownerInput !== '' ? ownerInput : github.context.repo.owner;
+            const labelNameInput = core.getInput(constants.LABEL_NAME);
+            const labelName = labelNameInput !== '' ? labelNameInput : constants.LABEL_DEFAULT_NAME;
             const token = core.getInput(constants.GITHUB_TOKEN, { required: true });
             const client = github.getOctokit(token);
             const prNumber = (0, pull_request_1.getPrNumber)();
             if (!prNumber) {
                 core.error('Failed to get pull request information!');
-                return;
+                throw new Error('failed to get pull request');
             }
             const { data: pullRequest } = yield client.rest.pulls.get({
                 owner: owner === '' ? owner : github.context.repo.owner,
@@ -8370,10 +8373,10 @@ function run() {
             });
             const changedFiles = yield (0, pull_request_1.getChangedFiles)(client, prNumber, owner);
             const migrationRe = /\bmigrations\b/g;
-            const existLabels = pullRequest.labels.map(label => label.name ? label.name : "");
+            const existLabels = pullRequest.labels.map(label => (label.name ? label.name : ''));
             for (const changedFile of changedFiles) {
                 if (changedFile.match(migrationRe)) {
-                    yield (0, pull_request_1.addMigrationLabel)(client, prNumber, owner, existLabels);
+                    yield (0, pull_request_1.addMigrationLabel)(client, prNumber, owner, labelName, existLabels);
                     break;
                 }
             }
@@ -8425,7 +8428,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addMigrationLabel = exports.getChangedFiles = exports.getPrNumber = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const constants = __importStar(__nccwpck_require__(9042));
 function getPrNumber() {
     const pullRequest = github.context.payload.pull_request;
     if (!pullRequest) {
@@ -8447,10 +8449,11 @@ function getChangedFiles(client, prNumber, owner) {
     });
 }
 exports.getChangedFiles = getChangedFiles;
-function addMigrationLabel(client, prNumber, owner, existLabels) {
+function addMigrationLabel(client, prNumber, owner, labelName, existLabels) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info(`${labelName} will be added`);
         core.info('Adding migration labels..');
-        existLabels.push(constants.LABEL_NAME);
+        existLabels.push(labelName);
         return yield client.rest.issues.addLabels({
             owner: owner,
             repo: github.context.repo.repo,
