@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { ClientType } from './types';
-import * as constants from './constants';
 
 export function getPrNumber(): number | undefined {
     const pullRequest = github.context.payload.pull_request;
@@ -33,11 +32,12 @@ export async function addMigrationLabel(
     client: ClientType,
     prNumber: number,
     owner: string,
-    existLabels: string[]
+    labelName: string,
+    existLabels: string[],
 ) {
     core.info('Adding migration labels..');
 
-    existLabels.push(constants.LABEL_NAME);
+    existLabels.push(labelName);
 
     return await client.rest.issues.addLabels({
         owner: owner,
