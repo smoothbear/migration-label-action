@@ -3,7 +3,7 @@
 A workflow for detecting and automatically labeling migration changes.
 
 ### Usage
-```
+```yml
 name: migration-label
 
 on: 
